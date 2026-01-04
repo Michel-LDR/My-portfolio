@@ -119,7 +119,7 @@
             // Footer
             document.querySelector('.footer-text p').textContent = texts.footerRights;
             
-            // Tooltips da navegação - CORRIGIDO
+            // Tooltips da navegação
             document.querySelectorAll('.nav-button[data-section="home"] .tooltip')[0].textContent = texts.home;
             document.querySelectorAll('.nav-button[data-section="about"] .tooltip')[0].textContent = texts.about;
             document.querySelectorAll('.nav-button[data-section="projects"] .tooltip')[0].textContent = texts.projects;
@@ -128,19 +128,8 @@
             // Tooltip do idioma e tema
             languageTooltip.textContent = texts.language;
             document.querySelector('#themeToggle .tooltip').textContent = texts.theme;
-        };
-            
-            navButtons.forEach(button => {
-                const section = button.dataset.section;
-                const tooltip = button.querySelector('.tooltip');
-                if (tooltip && tooltips[section]) {
-                    tooltip.textContent = tooltips[section];
-                }
-            });
-            
-            languageTooltip.textContent = texts.language;
-            document.querySelector('#themeToggle .tooltip').textContent = texts.theme;
-
+        }
+        
         // Carrega idioma salvo
         const savedLanguage = localStorage.getItem('language');
         if (savedLanguage) {
