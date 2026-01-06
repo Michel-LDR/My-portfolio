@@ -1,6 +1,6 @@
-// AGUARDA DOM ESTAR PRONTO
+
 window.addEventListener('DOMContentLoaded', function() {
-    
+
     // ELEMENTOS DO DOM
     const themeToggle = document.getElementById('themeToggle');
     const languageToggle = document.getElementById('languageToggle');
@@ -127,13 +127,36 @@ window.addEventListener('DOMContentLoaded', function() {
             if (iconMoon) iconMoon.style.display = 'none';
         }
     }
+
+    // Detecta e aplica o tema
+    let savedTheme = localStorage.getItem('theme');
     
-    // Carrega e aplica o tema
-    const savedTheme = localStorage.getItem('theme');
+    // Se não tem tema salvo, detecta a preferência do navegador
+    if (!savedTheme) {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        savedTheme = prefersDark ? 'dark' : 'light';
+        console.log('Tema detectado do navegador:', savedTheme);
+    } else {
+        console.log('Tema salvo:', savedTheme);
+    }
+    
     applyTheme(savedTheme === 'dark');
     
-    // Carrega e aplica o idioma
-    const savedLanguage = localStorage.getItem('language');
+    // Detecta e aplica o idioma
+    let savedLanguage = localStorage.getItem('language');
+    
+    if (!savedLanguage) {
+        const browserLang = navigator.language || navigator.userLanguage;
+        if (browserLang.toLowerCase().startsWith('pt')) {
+            savedLanguage = 'pt-br';
+        } else {
+            savedLanguage = 'en';
+        }
+        console.log('Idioma detectado do navegador:', browserLang, '→', savedLanguage);
+    } else {
+        console.log('Idioma salvo:', savedLanguage);
+    }
+    
     if (savedLanguage && translations[savedLanguage]) {
         currentLanguage = savedLanguage;
     }
@@ -147,6 +170,15 @@ window.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
     }
+
+    // Detecta mudança de tema do sistema em tempo real
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            const isDark = e.matches;
+            applyTheme(isDark);
+            console.log('Tema do sistema mudou para:', isDark ? 'dark' : 'light');
+        }
+    });
 
     // EVENT LISTENERS - IDIOMA
     if (languageToggle) {
@@ -402,8 +434,6 @@ window.addEventListener('DOMContentLoaded', function() {
             requestAnimationFrame(() => this.animate());
         }
     }
-
-    // Inicializa partículas
     new ParticleNetwork();
     
-});
+}); 
